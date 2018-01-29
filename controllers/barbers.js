@@ -34,8 +34,8 @@ router.put('/:id', (req, res) => {
 
 router.delete('./id', (req, res) => {
   Barbers.findOneAndRemove({_id: req.params.id})
-    .then(work => {
-      res.json(work)
+    .then(barber => {
+      res.json(barber)
     })
     .catch(err => console.log(err))
 })
