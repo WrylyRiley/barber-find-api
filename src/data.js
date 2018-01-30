@@ -1,7 +1,7 @@
 const Barber = require('../db/schema')
 
 const request = require('request')
-const numItems = 3
+const numItems = 1
 const seedData = []
 
 request({
@@ -11,7 +11,7 @@ request({
     client_id: 'TP0UK3TOUI3YINFMV3WQAQN3J01ZNSWYN4UJ3NQMPQ1WTTUI',
     client_secret: '1FLRCYYZKJ1VPC51KRPZIIN4HM5J1BXU203H0RGLMASUXWHC',
     near: 20005,
-    query: 'coffee',
+    query: 'barber shop',
     v: '20180128',
     limit: numItems
   }
@@ -19,17 +19,23 @@ request({
   if (err) {
     console.error(err)
   } else {
-    // console.log(body)
     let data = JSON.parse(body)
 
     for (let i = 0; i < numItems; i++) {
       let returned = data.response.groups[0]
       let items = returned.items[i]
       let name = items.venue.name
-      let address = items.venue.location.formattedAddress[0]
+      let address = items.venue.location.address
       let rating = items.venue.rating
+      let website = items.url
+      let postalcode = items.venue.location.postalCode
+      let hours = items.venue.hours.status || 'None Listed'
+      let phone = items.venue.contact.formattedPhone
+      let city = items.venue.location.city
+      let state = items.venue.location.state
 
-      seedData.push({name, address, rating})
+      console.log(items.tips.length)
+      seedData.push({name, address, rating, website, postalcode, hours, phone, city, state})
     }
 
     Barber.remove({})
