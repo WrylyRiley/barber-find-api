@@ -1,20 +1,4 @@
 const express = require('express')
-<<<<<<< HEAD
-const Barber = require('../db/schema')
-
-const router = express.Router()
-
-router.get('/', (req, res) => {
-  Barber.find({})
-    .then((barber) => {
-      res.render('data', {
-        barber: barber
-      })
-    })
-    .catch((err) => {
-      console.log(err)
-    })
-=======
 const router = express.Router()
 
 const mongoose = require('../db/models/barber')
@@ -41,7 +25,7 @@ router.get('/:id', (req, res) => {
 })
 
 router.put('/:id', (req, res) => {
-  Barbers.findOneAndUpdate({_id: req.params.id}, req.body, {new: true})
+  Barbers.findOneAndUpdate({ _id: req.params.id }, req.body, { new: true })
     .then(barber => {
       res.json(barber)
     })
@@ -49,12 +33,11 @@ router.put('/:id', (req, res) => {
 })
 
 router.delete('./id', (req, res) => {
-  Barbers.findOneAndRemove({_id: req.params.id})
+  Barbers.findOneAndRemove({ _id: req.params.id })
     .then(barber => {
       res.json(barber)
     })
     .catch(err => console.log(err))
->>>>>>> dev
 })
 
 module.exports = router
