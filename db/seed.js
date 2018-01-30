@@ -1,5 +1,5 @@
 const Barber = require('./schema')
-const seedData = require('./seeds.json')
+const seedData = require('../src/Utils')
 
 Barber.remove({})
     .then(_ => {
