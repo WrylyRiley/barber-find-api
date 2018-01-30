@@ -9,7 +9,8 @@ const BarberSchema = new mongoose.Schema({
   city: String,
   state: String,
   website: String,
-  rating: Number
+  rating: Number,
+  reviews: []
 })
 
 const Barber = mongoose.model('Barber', BarberSchema)

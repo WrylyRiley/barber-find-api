@@ -1,8 +1,11 @@
 const Barber = require('../db/schema')
 
 const request = require('request')
+
 const numItems = 1
-const seedData = []
+var seedData = []
+var reviews = []
+var venueID = ''
 
 request({
   url: 'https://api.foursquare.com/v2/venues/explore',
@@ -24,6 +27,11 @@ request({
     for (let i = 0; i < numItems; i++) {
       let returned = data.response.groups[0]
       let items = returned.items[i]
+
+      venueID = items.venue.id
+
+      console.log(venueID)
+
       let name = items.venue.name
       let address = items.venue.location.address
       let rating = items.venue.rating
@@ -34,7 +42,6 @@ request({
       let city = items.venue.location.city
       let state = items.venue.location.state
 
-      console.log(items.tips.length)
       seedData.push({name, address, rating, website, postalcode, hours, phone, city, state})
     }
 
@@ -78,5 +85,25 @@ request({
     // //     address
     // //   }
     // // })
+  }
+})
+
+request({
+  url: 'https://api.foursquare.com/v2/venues/VENUE_ID/tips',
+  method: 'GET',
+  qs: {
+    VENUE_ID: '4cbc78a24c60a09392a451ca',
+    client_id: 'TP0UK3TOUI3YINFMV3WQAQN3J01ZNSWYN4UJ3NQMPQ1WTTUI',
+    client_secret: '1FLRCYYZKJ1VPC51KRPZIIN4HM5J1BXU203H0RGLMASUXWHC',
+    limit: 10,
+    v: 20180129
+  }
+}, function (err, res, body) {
+  if (err) {
+    console.error(err)
+  } else {
+    console.log(body)
+    let data = JSON.parse(body)
+    console.log(data)
   }
 })
