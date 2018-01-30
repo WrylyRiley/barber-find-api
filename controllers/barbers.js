@@ -6,7 +6,6 @@ const router = express.Router()
 router.get('/', (req, res) => {
   Barber.find({})
     .then((barber) => {
-      console.log(barber)
       res.render('data', {
         barber: barber
       })

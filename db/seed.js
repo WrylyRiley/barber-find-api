@@ -1,6 +1,7 @@
 const Barber = require('./schema')
-const seedData = require('../src/Utils')
+const seedData = require('../src/data')
 
+console.log(seedData)
 Barber.remove({})
     .then(_ => {
       return Barber.collection.insert(seedData)
