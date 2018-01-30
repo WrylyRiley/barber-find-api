@@ -2,8 +2,8 @@ const Barber = require('../db/schema')
 
 const request = require('request')
 
-const numItems = 3
-
+const numItems = 5
+let seedData = []
 request(
   {
     url: 'https://api.foursquare.com/v2/venues/explore',
@@ -17,11 +17,10 @@ request(
       limit: numItems
     }
   },
-  (err, body) => {
+  (err, res, body) => {
     if (err) {
       console.error(err)
     } else {
-      let seedData = []
       let data = JSON.parse(body)
 
       for (let i = 0; i < numItems; i++) {
@@ -54,48 +53,55 @@ request(
           state
         })
       }
+      Barber.remove({})
+        .then(_ => {
+          return Barber.collection.insert(seedData)
+        })
+        .then(_ => {
+          process.exit()
+        })
     }
     return seedData
   }
 )
-  .then(seedData => {
-    seedData.forEach((item, idx) => {
-      request(
-        {
-          url: 'https://api.foursquare.com/v2/venues/VENUE_ID/tips',
-          method: 'GET',
-          qs: {
-            VENUE_ID: item.venueID,
-            client_id: 'TP0UK3TOUI3YINFMV3WQAQN3J01ZNSWYN4UJ3NQMPQ1WTTUI',
-            client_secret: '1FLRCYYZKJ1VPC51KRPZIIN4HM5J1BXU203H0RGLMASUXWHC',
-            limit: 10,
-            v: 20180129
-          }
-        },
-        (err, res, body) => {
-          let data = ''
-          if (err) {
-            console.error(err)
-          } else {
-            console.log(body)
-            data = JSON.parse(body)
-            console.log(data)
-          }
-
-          const key = `data-${idx}`
-          const newObj = { ...item, [key]: data }
-          return newObj
-        }
-      )
-    })
-    return seedData
-  })
-  .then(seedData => {
-    Barber.remove({})
-      .then(_ => {
-        return Barber.collection.insert(seedData)
-      })
-      .then(_ => {
-        process.exit()
-      })
-  })
+  // .then(seedData => {
+  //   seedData.forEach((item, idx) => {
+  //     request(
+  //       {
+  //         url: 'https://api.foursquare.com/v2/venues/VENUE_ID/tips',
+  //         method: 'GET',
+  //         qs: {
+  //           VENUE_ID: item.venueID,
+  //           client_id: 'TP0UK3TOUI3YINFMV3WQAQN3J01ZNSWYN4UJ3NQMPQ1WTTUI',
+  //           client_secret: '1FLRCYYZKJ1VPC51KRPZIIN4HM5J1BXU203H0RGLMASUXWHC',
+  //           limit: 10,
+  //           v: 20180129
+  //         }
+  //       },
+  //       (err, res, body) => {
+  //         let data = ''
+  //         if (err) {
+  //           console.error(err)
+  //         } else {
+  //           console.log(body)
+  //           data = JSON.parse(body)
+  //           console.log(data)
+  //         }
+  //
+  //         const key = `data-${idx}`
+  //         const newObj = { ...item, [key]: data }
+  //         return newObj
+  //       }
+  //     )
+  //   })
+  //   return seedData
+  // })
+  // .then(seedData => {
+  //   Barber.remove({})
+  //     .then(_ => {
+  //       return Barber.collection.insert(seedData)
+  //     })
+  //     .then(_ => {
+  //       process.exit()
+  //     })
+  // })
