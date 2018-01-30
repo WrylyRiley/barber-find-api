@@ -1,72 +1,10 @@
 [
   {
-    "title": "Google",
-    "motto": "Do no evil",
-    "description": "Advertising Company"
+    "name": "test Barber",
+    "address": "test Address"
   },
   {
-    "title": "UPS",
-    "motto": "What can brown do for you?",
-    "description": "parcel service"
-  },
-  {
-    "title": "Nike",
-    "motto": "Just do it.",
-    "description": "Shoe Company"
-  },
-  {
-    "title": "Apple",
-    "motto": "Think Different",
-    "description": "Computer Company"
-  },
-  {
-    "title": "Dollar Shave Club",
-    "motto": "Shave Time. Shave Money",
-    "description": "Shaving supply company"
-  },
-  {
-    "title": "Mastercard",
-    "motto": "There are some things money can't buy. For everything else, there's MasterCard.",
-    "description": "Credit Company"
-  },
-  {
-    "title": "De Beers",
-    "motto": "A Diamond is Forever",
-    "description": "Diamond Cartel"
-  },
-  {
-    "title": "Verizon Wireless",
-    "motto": "Can you hear me now? Good.",
-    "description": "Wireless carrier"
-  },
-  {
-    "title": "Audi",
-    "motto": "Vorsprung durch technik",
-    "description": "Automobile Manufacturer"
-  },
-  {
-    "title": "Dunkin Donuts",
-    "motto": "America Runs on Dunkin",
-    "description": "Coffee and Donut chain"
-  },
-  {
-    "title": "Meow Mix",
-    "motto": "Tastes So Good, Cats Ask for It by Name",
-    "description": "Pet Food Manufacturer"
-  },
-  {
-    "title": "General Electric",
-    "motto": "Imagination at Work",
-    "description": "Damn near everything"
-  },
-  {
-    "title": "State Farm",
-    "motto": "Like a Good Neighbor, State Farm is There",
-    "description": "Insurance and Underwriting"
-  },
-  {
-    "title": "The U.S. Marine Corps",
-    "motto": "The Few. The Proud. The Marines.",
-    "description": "U.S. Military"
+    "name": "second Barber",
+    "address": "second Address"
   }
 ]

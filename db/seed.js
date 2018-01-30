@@ -1,11 +1,10 @@
-const Post = require("./models/post")
+const Barber = require('./schema')
 const seedData = require('./seeds.json')
 
-Post.remove({})
+Barber.remove({})
     .then(_ => {
-        return Post.collection.insert(seedData)
+      return Barber.collection.insert(seedData)
     })
-    .then(_ => { 
-        process.exit()
+    .then(_ => {
+      process.exit()
     })
- 
