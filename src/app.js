@@ -1,18 +1,18 @@
 const express = require('express')
 const bodyParser = require('body-parser')
 const cors = require('cors')
-// const morgan = require('morgan')
+const morgan = require('morgan')
+const dotenv = require('dotenv')
 
 const app = express()
 
 var Posts = require('../db/models/post')
 
-// app.use(morgan('combined'))
+dotenv.load()
+
+app.use(morgan('combined'))
 app.use(bodyParser.json())
 app.use(cors())
-
-// Disabled caching I think? DBs fetched weren't updating Vue, so I had to add this.
-app.disable('etag')
 
 app.get('/', (req, res) => {
   // res.send({ message: 'hello from the server!' })
@@ -29,7 +29,6 @@ app.get('/posts', (req, res) => {
     })
 })
 
-// make this a modal with vuetify
 app.post('/posts', (req, res) => {
   Posts.create(req.body)
     .then(res.send({ msg: 'Success' }))
