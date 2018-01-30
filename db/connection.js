@@ -1,7 +1,5 @@
 const mongoose = require('mongoose')
 
-mongoose.Promise = Promise
-
 // Dev
 mongoose.connect('mongodb://localhost/barberhub', { useMongoClient: true })
 
@@ -13,5 +11,7 @@ if (process.env.NODE_ENV === 'production') {
   mongoose.connect('mongodb://localhost/barberhub', { useMongoClient: true })
     .catch(err => console.log(err))
 }
+
+mongoose.Promise = Promise
 
 module.exports = mongoose
