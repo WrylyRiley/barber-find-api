@@ -1,4 +1,8 @@
+const Barber = require('../db/schema')
+
 const request = require('request')
+const numItems = 3
+const seedData = []
 
 request({
   url: 'https://api.foursquare.com/v2/venues/explore',
@@ -9,7 +13,7 @@ request({
     near: 20005,
     query: 'coffee',
     v: '20180128',
-    limit: 2
+    limit: numItems
   }
 }, function (err, res, body) {
   if (err) {
@@ -17,38 +21,56 @@ request({
   } else {
     // console.log(body)
     let data = JSON.parse(body)
-    var returned = data.response.groups
-    returned = returned[0]
-    let items = returned.items[0]
-    // console.log(items.venue)
-    console.log(items.venue.name)
-    let address = items.venue.location.formattedAddress[0]
-    console.log(address)
-    console.log(items.venue.rating)
 
-    var second = data.response.groups[0]
-    let details = second.items[1]
-    console.log(details.venue.name)
-    let secondAddress = details.venue.location.formattedAddress[0]
-    console.log(secondAddress)
+    for (let i = 0; i < numItems; i++) {
+      let returned = data.response.groups[0]
+      let items = returned.items[i]
+      let name = items.venue.name
+      let address = items.venue.location.formattedAddress[0]
+      let rating = items.venue.rating
 
-    return JSON.parse([{
-      name: items.venue.name,
-      address: address
-    },
-    {
-      name: details.venue.name,
-      address: secondAddress
-    }])
-    // data.forEach(function (e) {
-    //   console.log(data)
-    // })
-    // return body.data.map(result => {
-    //   const {name, address} = result.show
-    //   return {
-    //     name,
-    //     address
-    //   }
-    // })
+      seedData.push({name, address, rating})
+    }
+
+    Barber.remove({})
+      .then(_ => {
+        return Barber.collection.insert(seedData)
+      })
+      .then(_ => {
+        process.exit()
+      })
+    // var returned = data.response.groups
+    // returned = returned[0]
+    // let items = returned.items[0]
+    // // console.log(items.venue)
+    // console.log(items.venue.name)
+    // let address = items.venue.location.formattedAddress[0]
+    // console.log(address)
+    // console.log(items.venue.rating)
+    //
+    // var second = data.response.groups[0]
+    // let details = second.items[1]
+    // console.log(details.venue.name)
+    // let secondAddress = details.venue.location.formattedAddress[0]
+    // console.log(secondAddress)
+    //
+    // return [{
+    //   name: items.venue.name,
+    //   address: address
+    // },
+    // {
+    //   name: details.venue.name,
+    //   address: secondAddress
+    // }]
+    // // data.forEach(function (e) {
+    // //   console.log(data)
+    // // })
+    // // return body.data.map(result => {
+    // //   const {name, address} = result.show
+    // //   return {
+    // //     name,
+    // //     address
+    // //   }
+    // // })
   }
 })
