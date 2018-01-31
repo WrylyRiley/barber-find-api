@@ -7,7 +7,6 @@ const Review = require('../db/reviewSchema')
 const numItems = 3
 const numReviews = 10
 
-let seedData = []
 let reviewData = []
 
 runAllRequests()
