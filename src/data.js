@@ -2,115 +2,126 @@ const Barber = require('../db/schema')
 const request = require('request-promise-native')
 const numItems = 3
 const chalk = require('chalk')
+var seedData = []
 
-request
-  .get(
-  {
-    url: 'https://api.foursquare.com/v2/venues/explore',
-    method: 'GET',
-    qs: {
-      client_id: 'TP0UK3TOUI3YINFMV3WQAQN3J01ZNSWYN4UJ3NQMPQ1WTTUI',
-      client_secret: '1FLRCYYZKJ1VPC51KRPZIIN4HM5J1BXU203H0RGLMASUXWHC',
-      near: 20005,
-      query: 'barber shop',
-      v: '20180128',
-      limit: numItems
-    }
-  },
-    (err, res, body) => {
-      let seedData = []
-      if (err) {
-        console.error(err)
-      } else {
-        let data = JSON.parse(body)
-        for (let i = 0; i < numItems; i++) {
-          let returned = data.response.groups[0]
-          let items = returned.items[i]
+runAllRequests()
 
-          // console.log(venueID)
+async function runAllRequests () {
+  // await completion of first request before moving forward
+  var returnedArray = await runFirstRequest()
+  console.log(chalk.green('New array in parent function : ' + returnedArray))
+  console.log(chalk.green(returnedArray.length))
+  for (let i = 0; i < returnedArray.length; i++) {
+    // await completion of second request before moving forward
+    console.log(chalk.yellow('Send a second request...awaiting...'))
+    console.log(chalk.yellow('Second request : ' + returnedArray[i]))
+    console.log(
+      chalk.yellow("Second request's VenueID : " + returnedArray[i].venueID)
+    )
 
-          let venueID = items.venue.id
-          let name = items.venue.name
-          let address = items.venue.location.address
-          let rating = items.venue.rating
-          let website = items.url
-          let postalcode = items.venue.location.postalCode
-          let hours = items.venue.hours.status || 'None Listed'
-          let phone = items.venue.contact.formattedPhone
-          let city = items.venue.location.city
-          let state = items.venue.location.state
-
-          console.log(chalk.red(items.venue.id))
-          console.log(chalk.red(items.venue.name))
-          console.log(chalk.red(items.venue.location.address))
-          console.log(chalk.red(items.venue.rating))
-          console.log(chalk.red(items.venue.url))
-          console.log(chalk.red(items.venue.location.postalCode))
-          console.log(chalk.red(items.venue.hours.status))
-          console.log(chalk.red(items.venue.contact.formattedPhone))
-          console.log(chalk.red(items.venue.location.city))
-          console.log(chalk.red(items.venue.location.state))
-
-          seedData.push({
-            venueID: venueID,
-            name: name,
-            address: address,
-            rating: rating,
-            website: website,
-            postalcode: postalcode,
-            hours: hours,
-            phone: phone,
-            city: city,
-            state: state
-          })
-          console.log(chalk.yellow(seedData))
-        }
-      }
-      console.log(chalk.blue(seedData))
-      return seedData
-    }
-  )
-  .then(seedData => {
-    console.log(chalk.blue(seedData))
-    seedData.forEach((item, idx) => {
-      console.log(chalk.red(item))
-      console.log(chalk.green(idx))
-      request(
-        {
-          url: 'https://api.foursquare.com/v2/venues/VENUE_ID/tips',
-          method: 'GET',
-          qs: {
-            VENUE_ID: item.venueID,
-            client_id: 'TP0UK3TOUI3YINFMV3WQAQN3J01ZNSWYN4UJ3NQMPQ1WTTUI',
-            client_secret: '1FLRCYYZKJ1VPC51KRPZIIN4HM5J1BXU203H0RGLMASUXWHC',
-            limit: 10,
-            v: 20180129
-          }
-        },
-        (err, res, body) => {
-          let data = ''
-          if (err) {
-            console.error(err)
-          } else {
-            console.log(body)
-            data = JSON.parse(body)
-            console.log(data)
-          }
-
-          const key = `data-${idx}`
-          const newObj = { ...item, [key]: data }
-          return newObj
-        }
-      )
+    returnedPromise = await runSecondRequest(returnedArray[i], i)
+    console.log(chalk.yellow('Received the second request: ' + returnedPromise))
+    // return the modified object from returnedPromise and swap it in the array
+    return returnedPromise
+  }
+  Barber.remove({})
+    .then(_ => {
+      return Barber.collection.insert(returnedArray)
     })
-    return seedData
+    .then(_ => {
+      process.exit()
+    })
+}
+
+function runFirstRequest () {
+  console.log(chalk.red('Inside the first request'))
+  return new Promise(resolve => {
+    request(
+      {
+        url: 'https://api.foursquare.com/v2/venues/explore',
+        method: 'GET',
+        qs: {
+          client_id: 'TP0UK3TOUI3YINFMV3WQAQN3J01ZNSWYN4UJ3NQMPQ1WTTUI',
+          client_secret: '1FLRCYYZKJ1VPC51KRPZIIN4HM5J1BXU203H0RGLMASUXWHC',
+          near: 20005,
+          query: 'barber shop',
+          v: '20180128',
+          limit: numItems
+        }
+      },
+      (error, response, body) => {
+        console.log(chalk.red("Inside the first request's callback"))
+        let newArray = []
+        if (error) {
+          console.error(chalk.red(error))
+        } else {
+          let data = JSON.parse(body)
+          for (let i = 0; i < numItems; i++) {
+            let returned = data.response.groups[0]
+            let items = returned.items[i]
+
+            // console.log(venueID)
+
+            let venueID = items.venue.id
+            let name = items.venue.name
+            let address = items.venue.location.address
+            let rating = items.venue.rating
+            let website = items.url
+            let postalcode = items.venue.location.postalCode
+            let hours = items.venue.hours.status || 'None Listed'
+            let phone = items.venue.contact.formattedPhone
+            let city = items.venue.location.city
+            let state = items.venue.location.state
+
+            newArray.push({
+              venueID: venueID,
+              name: name,
+              address: address,
+              rating: rating,
+              website: website,
+              postalcode: postalcode,
+              hours: hours,
+              phone: phone,
+              city: city,
+              state: state
+            })
+          }
+        }
+        console.log(chalk.blue('new array in first request: ' + newArray))
+        resolve(newArray)
+      }
+    )
   })
-  .then(seedData => {
-    Barber.remove({})
-      .then(_ => {
-        return Barber.collection.insert(seedData)
-      })
-      .then(_ => {
-        process.exit()
-      })
+}
+
+function runSecondRequest (item, idx) {
+	console.log(chalk.cyan("Second request's item : " + item))
+	console.log(chalk.cyan("Second request's index : " + idx))
+  return new Promise(resolve => {
+    request(
+      {
+        url: 'https://api.foursquare.com/v2/venues/VENUE_ID/tips',
+        method: 'GET',
+        qs: {
+          VENUE_ID: item.venueID,
+          client_id: 'TP0UK3TOUI3YINFMV3WQAQN3J01ZNSWYN4UJ3NQMPQ1WTTUI',
+          client_secret: '1FLRCYYZKJ1VPC51KRPZIIN4HM5J1BXU203H0RGLMASUXWHC',
+          limit: 10,
+          v: 20180129
+        }
+      },
+      (error, response, body) => {
+        let data = ''
+        if (error) {
+          console.error(chalk.red(error))
+        } else {
+          // console.log(body)
+          data = JSON.parse(body)
+        }
+        const key = `data-${idx}`
+        const newObj = { ...item, [key]: data }
+				resolve(newObj)
+      }
+    )
   })
+}
