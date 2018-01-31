@@ -9,21 +9,28 @@ runAllRequests()
 async function runAllRequests () {
   // await completion of first request before moving forward
   var returnedArray = await runFirstRequest()
-  console.log(chalk.green('New array in parent function : ' + returnedArray))
+  console.log(chalk.green('New array in parent function: ' + returnedArray))
   console.log(chalk.green(returnedArray.length))
   for (let i = 0; i < returnedArray.length; i++) {
     // await completion of second request before moving forward
     console.log(chalk.yellow('Send a second request...awaiting...'))
-    console.log(chalk.yellow('Second request : ' + returnedArray[i]))
+    console.log(chalk.yellow('Second request: ' + returnedArray[i]))
     console.log(
-      chalk.yellow("Second request's VenueID : " + returnedArray[i].venueID)
+      chalk.yellow("Second request's VenueID: " + returnedArray[i].venueID)
     )
 
     returnedPromise = await runSecondRequest(returnedArray[i], i)
     console.log(chalk.yellow('Received the second request: ' + returnedPromise))
+    console.log(
+      chalk.yellow(
+        'Array was modified: ' + (returnedArray[i] !== returnedPromise)
+      )
+    )
+
     // return the modified object from returnedPromise and swap it in the array
-    return returnedPromise
+    returnedArray[i] = returnedPromise
   }
+
   Barber.remove({})
     .then(_ => {
       return Barber.collection.insert(returnedArray)
@@ -95,8 +102,9 @@ function runFirstRequest () {
 }
 
 function runSecondRequest (item, idx) {
-	console.log(chalk.cyan("Second request's item : " + item))
-	console.log(chalk.cyan("Second request's index : " + idx))
+  console.log(chalk.green("Second request's item : " + item))
+  console.log(chalk.green("Second request's item.venueID : " + item.venueID))
+  console.log(chalk.green("Second request's index : " + idx))
   return new Promise(resolve => {
     request(
       {
@@ -111,6 +119,11 @@ function runSecondRequest (item, idx) {
         }
       },
       (error, response, body) => {
+        console.log(chalk.cyan("Second request's callback's error : " + error))
+        console.log(
+          chalk.cyan("Second request's callback's response : " + response)
+        )
+        console.log(chalk.cyan("Second request's callback's body : " + body))
         let data = ''
         if (error) {
           console.error(chalk.red(error))
@@ -119,8 +132,12 @@ function runSecondRequest (item, idx) {
           data = JSON.parse(body)
         }
         const key = `data-${idx}`
+        console.log(chalk.green("Second request's data: " + key))
         const newObj = { ...item, [key]: data }
-				resolve(newObj)
+        console.log(chalk.green("Second request's newObj: " + newObj))
+        console.log(
+          chalk.green("Second request's newObj type: " + typeof newObj)
+        )
       }
     )
   })
