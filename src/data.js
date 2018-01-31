@@ -14,14 +14,20 @@ runAllRequests()
 async function runAllRequests () {
   // await completion of first request before moving forward
   var returnedArray = await runFirstRequest()
+  console.log(returnedArray)
   for (let i = 0; i < returnedArray.length; i++) {
+    console.log('test' + i)
     // await completion of second request before moving forward
     returnedPromise = await runSecondRequest(returnedArray[i], i)
+    console.log(returnedPromise)
     // return the modified object from returnedPromise and swap it in the array
     returnedArray[i] = returnedPromise
+    console.log('returned array' + returnedArray)
   }
+  console.log('barber')
   Barber.remove({})
     .then(_ => {
+      console.log(returnedArray)
       return Barber.collection.insert(returnedArray)
     })
     .then(_ => {
