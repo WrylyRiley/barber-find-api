@@ -18,7 +18,8 @@
 		"hbs": "^4.0.1",
 		"method-override": "^2.3.10",
 		"mongoose": "^4.13.9",
-		"request": "^2.83.0"
+		"request": "^2.83.0",
+		"request-promise-native": "^1.0.5"
 	},
 	"devDependencies": {
 		"chalk": "^2.3.0",
