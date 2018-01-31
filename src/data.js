@@ -108,10 +108,9 @@ function runSecondRequest (item, idx) {
   return new Promise(resolve => {
     request(
       {
-        url: 'https://api.foursquare.com/v2/venues/VENUE_ID/tips',
+        url: `https://api.foursquare.com/v2/venues/${item.venueID}/tips`,
         method: 'GET',
         qs: {
-          VENUE_ID: item.venueID,
           client_id: 'TP0UK3TOUI3YINFMV3WQAQN3J01ZNSWYN4UJ3NQMPQ1WTTUI',
           client_secret: '1FLRCYYZKJ1VPC51KRPZIIN4HM5J1BXU203H0RGLMASUXWHC',
           limit: 10,
@@ -132,12 +131,8 @@ function runSecondRequest (item, idx) {
           data = JSON.parse(body)
         }
         const key = `data-${idx}`
-        console.log(chalk.green("Second request's data: " + key))
-        const newObj = { ...item, [key]: data }
-        console.log(chalk.green("Second request's newObj: " + newObj))
-        console.log(
-          chalk.green("Second request's newObj type: " + typeof newObj)
-        )
+				const newObj = { ...item, [key]: data }
+				resolve(newObj)
       }
     )
   })
