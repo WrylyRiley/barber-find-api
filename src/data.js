@@ -5,6 +5,7 @@ const chalk = require('chalk')
 
 runAllRequests()
 
+
 async function runAllRequests () {
   // await completion of first request before moving forward
   var returnedArray = await runFirstRequest()
@@ -47,8 +48,6 @@ function runFirstRequest () {
           for (let i = 0; i < numItems; i++) {
             let returned = data.response.groups[0]
             let items = returned.items[i]
-
-            // console.log(venueID)
 
             let venueID = items.venue.id
             let name = items.venue.name
@@ -109,3 +108,4 @@ function runSecondRequest (item, idx) {
     )
   })
 }
+
