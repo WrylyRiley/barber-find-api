@@ -1,5 +1,4 @@
 const request = require('request-promise-native')
-const chalk = require('chalk')
 
 const Barber = require('../db/barberSchema')
 const Review = require('../db/reviewSchema')
@@ -48,7 +47,7 @@ function runFirstRequest () {
       (error, response, body) => {
         let newArray = []
         if (error) {
-          console.error(chalk.red(error))
+          console.error(error)
         } else {
           let data = JSON.parse(body)
           for (let i = 0; i < numItems; i++) {
@@ -104,7 +103,7 @@ function runSecondRequest (item, idx) {
       (error, response, body) => {
         let data = ''
         if (error) {
-          console.error(chalk.red(error))
+          console.error(error)
         } else {
           data = JSON.parse(body)
           let reviews = data.response.tips.items
