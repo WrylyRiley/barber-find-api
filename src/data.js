@@ -2,29 +2,21 @@ const request = require('request-promise-native')
 const chalk = require('chalk')
 
 const Barber = require('../db/barberSchema')
-const Review = require('../db/reviewSchema')
 
 const numItems = 3
 const numReviews = 10
-
-let reviewData = []
 
 runAllRequests()
 
 async function runAllRequests () {
   // await completion of first request before moving forward
   var returnedArray = await runFirstRequest()
-  console.log(returnedArray)
   for (let i = 0; i < returnedArray.length; i++) {
-    console.log('test' + i)
     // await completion of second request before moving forward
-    returnedPromise = await runSecondRequest(returnedArray[i], i)
-    console.log(returnedPromise)
+    let returnedPromise = await runSecondRequest(returnedArray[i], i)
     // return the modified object from returnedPromise and swap it in the array
     returnedArray[i] = returnedPromise
-    console.log('returned array' + returnedArray)
   }
-  console.log('barber')
   Barber.remove({})
     .then(_ => {
       console.log(returnedArray)
@@ -94,6 +86,7 @@ function runFirstRequest () {
 }
 
 function runSecondRequest (item, idx) {
+  let reviewData = []
   return new Promise(resolve => {
     request(
       {
@@ -107,6 +100,7 @@ function runSecondRequest (item, idx) {
         }
       },
       (error, response, body) => {
+        console.log(chalk.cyan('second function'))
         let data = ''
         if (error) {
           console.error(chalk.red(error))
@@ -125,13 +119,6 @@ function runSecondRequest (item, idx) {
               lastname
             })
           }
-          Review.remove({})
-          .then(_ => {
-            Review.collection.insert(reviewData)
-          })
-          .then(_ => {
-            process.exit()
-          })
         }
         const newObj = { ...item, reviews: reviewData }
         resolve(newObj)
