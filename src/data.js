@@ -128,8 +128,7 @@ function runSecondRequest (item, idx) {
             process.exit()
           })
         }
-        const key = `data-${idx}`
-        const newObj = { ...item, [key]: data }
+        const newObj = { ...item, reviews: reviewData }
         resolve(newObj)
       }
     )
