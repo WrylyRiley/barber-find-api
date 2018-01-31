@@ -1,10 +1,16 @@
-const Barber = require('../db/schema')
 const request = require('request-promise-native')
-const numItems = 3
 const chalk = require('chalk')
 
-runAllRequests()
+const Barber = require('../db/barberSchema')
+const Review = require('../db/reviewSchema')
 
+const numItems = 3
+const numReviews = 10
+
+let seedData = []
+let reviewData = []
+
+runAllRequests()
 
 async function runAllRequests () {
   // await completion of first request before moving forward
@@ -59,6 +65,7 @@ function runFirstRequest () {
             let phone = items.venue.contact.formattedPhone
             let city = items.venue.location.city
             let state = items.venue.location.state
+            let reviews = []
 
             newArray.push({
               venueID: venueID,
@@ -70,7 +77,8 @@ function runFirstRequest () {
               hours: hours,
               phone: phone,
               city: city,
-              state: state
+              state: state,
+              reviews: reviews
             })
           }
         }
@@ -89,7 +97,7 @@ function runSecondRequest (item, idx) {
         qs: {
           client_id: 'TP0UK3TOUI3YINFMV3WQAQN3J01ZNSWYN4UJ3NQMPQ1WTTUI',
           client_secret: '1FLRCYYZKJ1VPC51KRPZIIN4HM5J1BXU203H0RGLMASUXWHC',
-          limit: 10,
+          limit: numReviews,
           v: 20180129
         }
       },
@@ -98,8 +106,27 @@ function runSecondRequest (item, idx) {
         if (error) {
           console.error(chalk.red(error))
         } else {
-          // console.log(body)
           data = JSON.parse(body)
+          let reviews = data.response.tips.items
+
+          for (let i = 0; i < numReviews; i++) {
+            let text = reviews[i].text
+            let firstname = reviews[i].user.firstName
+            let lastname = reviews[i].user.lastName || ' '
+
+            reviewData.push({
+              text,
+              firstname,
+              lastname
+            })
+          }
+          Review.remove({})
+          .then(_ => {
+            Review.collection.insert(reviewData)
+          })
+          .then(_ => {
+            process.exit()
+          })
         }
         const key = `data-${idx}`
         const newObj = { ...item, [key]: data }
