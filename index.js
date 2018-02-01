@@ -2,11 +2,13 @@ const express = require('express')
 const hbs = require('express-handlebars')
 const parser = require('body-parser')
 const methodOverride = require('method-override')
+const cors = require('cors')()
 
 const app = express()
 
 app.use(methodOverride('_method'))
 app.use(parser.urlencoded({extended: true}))
+app.use(cors)
 app.set('view engine', 'hbs')
 
 app.engine('.hbs', hbs({
