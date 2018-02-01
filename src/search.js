@@ -7,26 +7,23 @@ const numReviews = 5
 
 runAllRequests()
 
-async function runAllRequests () {
+async function runAllRequests (query, near) {
   // await completion of first request before moving forward
-  var returnedArray = await runFirstRequest()
+  var returnedArray = await runFirstRequest(query, near)
   for (let i = 0; i < returnedArray.length; i++) {
     // await completion of second request before moving forward
     let returnedPromise = await runSecondRequest(returnedArray[i], i)
     // return the modified object from returnedPromise and swap it in the array
     returnedArray[i] = returnedPromise
   }
-  Barber.remove({})
-    .then(_ => {
-      console.log(returnedArray)
-      return Barber.collection.insert(returnedArray)
-    })
-    .then(_ => {
-      process.exit()
-    })
+  Barber.create(returnedArray[0]).then(_ => {
+    process.exit()
+  })
+
+  return true
 }
 
-function runFirstRequest () {
+function runFirstRequest (query, near) {
   return new Promise(resolve => {
     request(
       {
@@ -35,8 +32,8 @@ function runFirstRequest () {
         qs: {
           client_id: 'TP0UK3TOUI3YINFMV3WQAQN3J01ZNSWYN4UJ3NQMPQ1WTTUI',
           client_secret: '1FLRCYYZKJ1VPC51KRPZIIN4HM5J1BXU203H0RGLMASUXWHC',
-          near: 20005,
-          query: 'barber shop',
+          near: near,
+          query: query,
           v: '20180128',
           limit: numItems
         }
@@ -44,13 +41,12 @@ function runFirstRequest () {
       (error, response, body) => {
         let newArray = []
         if (error) {
-          console.error(error)
+          console.log(error)
         } else {
           let data = JSON.parse(body)
           for (let i = 0; i < numItems; i++) {
             let returned = data.response.groups[0]
             let items = returned.items[i]
-
             let venueID = items.venue.id
             let name = items.venue.name
             let address = items.venue.location.address
@@ -125,3 +121,5 @@ function runSecondRequest (item, idx) {
     )
   })
 }
+
+export default runAllRequests

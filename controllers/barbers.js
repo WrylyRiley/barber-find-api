@@ -3,6 +3,7 @@ const router = express.Router()
 
 const mongoose = require('../db/models/barber')
 const Barbers = mongoose.model('Barber')
+const search = require('../src/search')
 
 router.get('/', (req, res) => {
   Barbers.find()
@@ -11,11 +12,7 @@ router.get('/', (req, res) => {
 })
 
 router.post('/', (req, res) => {
-  Barbers.create(req.body)
-    .then(barber => {
-      res.json(barber)
-    })
-    .catch(err => console.log(err))
+  search(req.name, req.postalCode)
 })
 
 router.get('/:id', (req, res) => {
