@@ -1,5 +1,13 @@
 const mongoose = require('./connection')
 
+const ReviewSchema = new mongoose.Schema({
+  text: String,
+  firstname: String,
+  lastname: String
+})
+
+const Review = mongoose.model('Review', ReviewSchema)
+
 const BarberSchema = new mongoose.Schema({
   name: String,
   address: String,
@@ -10,7 +18,7 @@ const BarberSchema = new mongoose.Schema({
   state: String,
   website: String,
   rating: Number,
-  reviews: []
+  reviews: [{type: mongoose.Schema.Types.ObjectId, ref: 'Review'}]
 })
 
 const Barber = mongoose.model('Barber', BarberSchema)
