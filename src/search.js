@@ -4,20 +4,9 @@ const request = require('request-promise-native')
 // pull database model
 const Barber = require('../db/barberSchema')
 
-<<<<<<< HEAD
 const numItems = 1
 const numReviews = 5
 
-=======
-// create constants for number of desired results
-const numItems = 15
-const numReviews = 5
-
-// run function to perform api calls
-runAllRequests()
-
-// function to use both api calls
->>>>>>> 7ca1f32f8222cb50d65ec35222675ce1d42ae18c
 async function runAllRequests (query, near) {
   // await completion of first request before moving forward
   var returnedArray = await runFirstRequest(query, near)
@@ -145,11 +134,6 @@ function runSecondRequest (item, idx) {
   })
 }
 
-<<<<<<< HEAD
 module.exports = {
   search: runAllRequests
 }
-=======
-// export function
-export default runAllRequests
->>>>>>> 7ca1f32f8222cb50d65ec35222675ce1d42ae18c

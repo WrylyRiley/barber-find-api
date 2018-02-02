@@ -3,13 +3,7 @@ const express = require('express')
 // set up router
 const router = express.Router()
 
-<<<<<<< HEAD
 const mongoose = require('../db/barberSchema')
-=======
-// import models
-const mongoose = require('../db/models/barber')
-const Barbers = mongoose.model('Barber')
->>>>>>> 7ca1f32f8222cb50d65ec35222675ce1d42ae18c
 const search = require('../src/search')
 
 // get all barbers from database
