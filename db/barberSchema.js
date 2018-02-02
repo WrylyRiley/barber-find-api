@@ -12,7 +12,6 @@ const BarberSchema = new mongoose.Schema({
   name: String,
   address: String,
   postalcode: Number,
-  hours: String,
   phone: String,
   city: String,
   state: String,

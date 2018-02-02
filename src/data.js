@@ -64,7 +64,6 @@ function runFirstRequest () {
             let rating = items.venue.rating
             let website = items.url
             let postalcode = items.venue.location.postalCode
-            let hours = items.venue.hours || 'None Listed'
             let phone = items.venue.contact.formattedPhone
             let city = items.venue.location.city
             let state = items.venue.location.state
@@ -78,7 +77,6 @@ function runFirstRequest () {
               rating: rating,
               website: website,
               postalcode: postalcode,
-              hours: hours,
               phone: phone,
               city: city,
               state: state,
