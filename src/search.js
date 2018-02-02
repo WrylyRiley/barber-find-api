@@ -4,7 +4,7 @@ const request = require('request-promise-native')
 // pull database model
 const Barber = require('../db/barberSchema')
 
-const numItems = 1
+const numItems = 10
 const numReviews = 5
 
 module.exports = (query, near) => {
@@ -12,18 +12,17 @@ module.exports = (query, near) => {
 }
 
 async function runAllRequests (query, near) {
+  random = Math.floor(Math.random() * 10)
   // await completion of first request before moving forward
   var returnedArray = await runFirstRequest(query, near)
   // await completion of second request before moving forward
-  let returnedPromise = await runSecondRequest(returnedArray[0], 0)
+  let returnedPromise = await runSecondRequest(returnedArray[random], random)
   // return the modified object from returnedPromise and swap it in the array
-  returnedArray[0] = returnedPromise
+  returnedArray[random] = returnedPromise
 
-  Barber.create(returnedArray[0]).then(_ => {
-    process.exit()
-  })
+  Barber.create(returnedArray[random])
   // empty return statement
-  return returnedArray[0]
+  return returnedArray[random]
 }
 
 // function to call first api request
@@ -51,7 +50,6 @@ function runFirstRequest (query, near) {
           let data = JSON.parse(body)
           // for loop to iterate through number of venues recieved
           for (let i = 0; i < numItems; i++) {
-            // store data returned
             let returned = data.response.groups[0]
             let items = returned.items[i]
             let venueID = items.venue.id
@@ -60,7 +58,6 @@ function runFirstRequest (query, near) {
             let rating = items.venue.rating || 'None Listed'
             let website = items.url || 'None Listed'
             let postalcode = items.venue.location.postalCode || 'None Listed'
-            let hours = items.venue.hours || 'None Listed'
             let phone = items.venue.contact.formattedPhone || 'None Listed'
             let city = items.venue.location.city || 'None Listed'
             let state = items.venue.location.state || 'None Listed'
@@ -74,7 +71,6 @@ function runFirstRequest (query, near) {
               rating: rating,
               website: website,
               postalcode: postalcode,
-              hours: hours,
               phone: phone,
               city: city,
               state: state,

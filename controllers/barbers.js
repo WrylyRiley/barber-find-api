@@ -41,7 +41,7 @@ router.put('/:id', (req, res) => {
 })
 
 // delete a barber
-router.delete('./id', (req, res) => {
+router.delete('/:id', (req, res) => {
   Barbers.findOneAndRemove({ _id: req.params.id })
     .then(barber => {
       res.json(barber)
