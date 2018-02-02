@@ -1,9 +1,10 @@
+// import dependency
 const mongoose = require('mongoose')
 
-// Dev
+// start database connection
 mongoose.connect('mongodb://localhost/barberhub', { useMongoClient: true })
 
-// Prod
+// set up connection points
 if (process.env.NODE_ENV === 'production') {
   mongoose.connect(process.env.MLAB_URL, { useMongoClient: true })
     .catch(err => console.log(err))
@@ -12,6 +13,8 @@ if (process.env.NODE_ENV === 'production') {
     .catch(err => console.log(err))
 }
 
+// set up promise
 mongoose.Promise = Promise
 
+// export connection
 module.exports = mongoose
