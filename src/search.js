@@ -7,21 +7,25 @@ const Barber = require('../db/barberSchema')
 const numItems = 1
 const numReviews = 5
 
+module.exports = (query, near) => {
+  runAllRequests(query, near)
+}
+
 async function runAllRequests (query, near) {
+  console.log(query)
+  console.log(near)
   // await completion of first request before moving forward
   var returnedArray = await runFirstRequest(query, near)
-  for (let i = 0; i < returnedArray.length; i++) {
-    // await completion of second request before moving forward
-    let returnedPromise = await runSecondRequest(returnedArray[i], i)
-    // return the modified object from returnedPromise and swap it in the array
-    returnedArray[i] = returnedPromise
-  }
+  // await completion of second request before moving forward
+  let returnedPromise = await runSecondRequest(returnedArray[0], 0)
+  // return the modified object from returnedPromise and swap it in the array
+  returnedArray[0] = returnedPromise
+
   Barber.create(returnedArray[0]).then(_ => {
     process.exit()
   })
-
   // empty return statement
-  return true
+  return returnedArray[0]
 }
 
 // function to call first api request
@@ -54,14 +58,14 @@ function runFirstRequest (query, near) {
             let items = returned.items[i]
             let venueID = items.venue.id
             let name = items.venue.name
-            let address = items.venue.location.address
-            let rating = items.venue.rating
-            let website = items.url
-            let postalcode = items.venue.location.postalCode
+            let address = items.venue.location.address || 'None Listed'
+            let rating = items.venue.rating || 'None Listed'
+            let website = items.url || 'None Listed'
+            let postalcode = items.venue.location.postalCode || 'None Listed'
             let hours = items.venue.hours || 'None Listed'
-            let phone = items.venue.contact.formattedPhone
-            let city = items.venue.location.city
-            let state = items.venue.location.state
+            let phone = items.venue.contact.formattedPhone || 'None Listed'
+            let city = items.venue.location.city || 'None Listed'
+            let state = items.venue.location.state || 'None Listed'
             let reviews = []
 
             // store data into array
@@ -80,6 +84,7 @@ function runFirstRequest (query, near) {
             })
           }
         }
+        console.log(newArray)
         resolve(newArray)
       }
     )
@@ -132,8 +137,4 @@ function runSecondRequest (item, idx) {
       }
     )
   })
-}
-
-module.exports = {
-  search: runAllRequests
 }
