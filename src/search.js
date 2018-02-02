@@ -1,10 +1,23 @@
+// import dependency
 const request = require('request-promise-native')
 
+// pull database model
 const Barber = require('../db/barberSchema')
 
+<<<<<<< HEAD
 const numItems = 1
 const numReviews = 5
 
+=======
+// create constants for number of desired results
+const numItems = 15
+const numReviews = 5
+
+// run function to perform api calls
+runAllRequests()
+
+// function to use both api calls
+>>>>>>> 7ca1f32f8222cb50d65ec35222675ce1d42ae18c
 async function runAllRequests (query, near) {
   // await completion of first request before moving forward
   var returnedArray = await runFirstRequest(query, near)
@@ -18,9 +31,11 @@ async function runAllRequests (query, near) {
     process.exit()
   })
 
+  // empty return statement
   return true
 }
 
+// function to call first api request
 function runFirstRequest (query, near) {
   return new Promise(resolve => {
     request(
@@ -37,12 +52,15 @@ function runFirstRequest (query, near) {
         }
       },
       (error, response, body) => {
+        // array to store data
         let newArray = []
         if (error) {
           console.log(error)
         } else {
           let data = JSON.parse(body)
+          // for loop to iterate through number of venues recieved
           for (let i = 0; i < numItems; i++) {
+            // store data returned
             let returned = data.response.groups[0]
             let items = returned.items[i]
             let venueID = items.venue.id
@@ -57,6 +75,7 @@ function runFirstRequest (query, near) {
             let state = items.venue.location.state
             let reviews = []
 
+            // store data into array
             newArray.push({
               venueID: venueID,
               name: name,
@@ -78,7 +97,9 @@ function runFirstRequest (query, near) {
   })
 }
 
+// second api call
 function runSecondRequest (item, idx) {
+  // create variable to store data
   let reviewData = []
   return new Promise(resolve => {
     request(
@@ -93,19 +114,22 @@ function runSecondRequest (item, idx) {
         }
       },
       (error, response, body) => {
-        console.log('second function')
+        // create variable to store data
         let data = ''
         if (error) {
           console.error(error)
         } else {
           data = JSON.parse(body)
+          // import specific data from the api call
           let reviews = data.response.tips.items
 
+          // iterate through all data returned
           for (let i = 0; i < reviews.length; i++) {
             let text = reviews[i].text
             let firstname = reviews[i].user.firstName
             let lastname = reviews[i].user.lastName || ' '
 
+            // push data to data array
             reviewData.push({
               text,
               firstname,
@@ -113,6 +137,7 @@ function runSecondRequest (item, idx) {
             })
           }
         }
+        // return object of data
         const newObj = { ...item, reviews: reviewData }
         resolve(newObj)
       }
@@ -120,6 +145,11 @@ function runSecondRequest (item, idx) {
   })
 }
 
+<<<<<<< HEAD
 module.exports = {
   search: runAllRequests
 }
+=======
+// export function
+export default runAllRequests
+>>>>>>> 7ca1f32f8222cb50d65ec35222675ce1d42ae18c

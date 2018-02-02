@@ -1,5 +1,7 @@
+// connect to database
 const mongoose = require('./connection')
 
+// create review schema key value pairs
 const ReviewSchema = new mongoose.Schema({
   firstname: String,
   lastname: String,
@@ -19,6 +21,8 @@ const BarberSchema = new mongoose.Schema({
   reviews: [ReviewSchema]
 })
 
+// create barber schema
 const Barber = mongoose.model('Barber', BarberSchema)
 
+// export barber Schema
 module.exports = Barber

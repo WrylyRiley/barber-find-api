@@ -1,12 +1,17 @@
+// initialize dependencies
 const request = require('request-promise-native')
 
+// call schema model
 const Barber = require('../db/barberSchema')
 
+// initialize variables
 const numItems = 15
 const numReviews = 5
 
+// run function
 runAllRequests()
 
+// run all api requests
 async function runAllRequests () {
   // await completion of first request before moving forward
   var returnedArray = await runFirstRequest()
@@ -16,9 +21,9 @@ async function runAllRequests () {
     // return the modified object from returnedPromise and swap it in the array
     returnedArray[i] = returnedPromise
   }
+  // remove items in database and seed it with retrieved data
   Barber.remove({})
     .then(_ => {
-      console.log(returnedArray)
       return Barber.collection.insert(returnedArray)
     })
     .then(_ => {
@@ -26,6 +31,7 @@ async function runAllRequests () {
     })
 }
 
+// call first api request to get list of barbers
 function runFirstRequest () {
   return new Promise(resolve => {
     request(
@@ -51,6 +57,7 @@ function runFirstRequest () {
             let returned = data.response.groups[0]
             let items = returned.items[i]
 
+            // store retrieved data
             let venueID = items.venue.id
             let name = items.venue.name
             let address = items.venue.location.address
@@ -63,6 +70,7 @@ function runFirstRequest () {
             let state = items.venue.location.state
             let reviews = []
 
+            // create a new array with stored information
             newArray.push({
               venueID: venueID,
               name: name,
@@ -78,13 +86,16 @@ function runFirstRequest () {
             })
           }
         }
+        // returns array
         resolve(newArray)
       }
     )
   })
 }
 
+// second api call
 function runSecondRequest (item, idx) {
+  // create array to store data
   let reviewData = []
   return new Promise(resolve => {
     request(
@@ -107,11 +118,14 @@ function runSecondRequest (item, idx) {
           data = JSON.parse(body)
           let reviews = data.response.tips.items
 
+          // for loop to iterate through number of reviews retrieved
           for (let i = 0; i < reviews.length; i++) {
+            // set variables to be data that was found
             let text = reviews[i].text
             let firstname = reviews[i].user.firstName
             let lastname = reviews[i].user.lastName || ' '
 
+            // push data to array of data
             reviewData.push({
               text,
               firstname,
@@ -119,6 +133,7 @@ function runSecondRequest (item, idx) {
             })
           }
         }
+        // returns an object with all data
         const newObj = { ...item, reviews: reviewData }
         resolve(newObj)
       }
