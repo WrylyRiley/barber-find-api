@@ -2,10 +2,8 @@ const request = require('request-promise-native')
 
 const Barber = require('../db/barberSchema')
 
-const numItems = 15
+const numItems = 1
 const numReviews = 5
-
-runAllRequests()
 
 async function runAllRequests (query, near) {
   // await completion of first request before moving forward
@@ -122,4 +120,6 @@ function runSecondRequest (item, idx) {
   })
 }
 
-export default runAllRequests
+module.exports = {
+  search: runAllRequests
+}

@@ -1,8 +1,7 @@
 const express = require('express')
 const router = express.Router()
 
-const mongoose = require('../db/models/barber')
-const Barbers = mongoose.model('Barber')
+const mongoose = require('../db/barberSchema')
 const search = require('../src/search')
 
 router.get('/', (req, res) => {

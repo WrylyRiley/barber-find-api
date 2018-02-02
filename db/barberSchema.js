@@ -1,12 +1,10 @@
 const mongoose = require('./connection')
 
 const ReviewSchema = new mongoose.Schema({
-  text: String,
   firstname: String,
-  lastname: String
+  lastname: String,
+  text: String
 })
-
-const Review = mongoose.model('Review', ReviewSchema)
 
 const BarberSchema = new mongoose.Schema({
   name: String,
@@ -18,7 +16,7 @@ const BarberSchema = new mongoose.Schema({
   state: String,
   website: String,
   rating: Number,
-  reviews: [{type: mongoose.Schema.Types.ObjectId, ref: 'Review'}]
+  reviews: [ReviewSchema]
 })
 
 const Barber = mongoose.model('Barber', BarberSchema)
