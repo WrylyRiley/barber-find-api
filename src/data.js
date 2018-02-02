@@ -110,7 +110,6 @@ function runSecondRequest (item, idx) {
         }
       },
       (error, response, body) => {
-        console.log('second function')
         let data = ''
         if (error) {
           console.error(error)

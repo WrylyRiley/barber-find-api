@@ -5,7 +5,6 @@ const router = express.Router()
 
 const Barbers = require('../db/barberSchema')
 const Search = require('../src/search')
-const chalk = require('chalk')
 
 // get all barbers from database
 router.get('/', (req, res) => {
@@ -17,11 +16,7 @@ router.get('/', (req, res) => {
 // search for barbers by zip code
 router.post('/', (req, res) => {
   let newData = Object.keys(req.body)[0]
-  console.log(newData)
   newData = JSON.parse(newData)
-  console.log(newData)
-  console.log(newData.name)
-  console.log(newData)
   Search(newData.name, newData.postalcode)
 })
 

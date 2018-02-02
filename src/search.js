@@ -12,8 +12,6 @@ module.exports = (query, near) => {
 }
 
 async function runAllRequests (query, near) {
-  console.log(query)
-  console.log(near)
   // await completion of first request before moving forward
   var returnedArray = await runFirstRequest(query, near)
   // await completion of second request before moving forward
@@ -84,7 +82,6 @@ function runFirstRequest (query, near) {
             })
           }
         }
-        console.log(newArray)
         resolve(newArray)
       }
     )
