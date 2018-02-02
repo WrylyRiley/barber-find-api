@@ -3,7 +3,7 @@ const express = require('express')
 // set up router
 const router = express.Router()
 
-const mongoose = require('../db/barberSchema')
+const Barbers = require('../db/barberSchema')
 const search = require('../src/search')
 
 // get all barbers from database
