@@ -12,7 +12,7 @@ module.exports = (query, near) => {
 }
 
 async function runAllRequests (query, near) {
-  random = Math.floor(Math.random() * 10)
+  let random = Math.floor(Math.random() * 10)
   // await completion of first request before moving forward
   var returnedArray = await runFirstRequest(query, near)
   // await completion of second request before moving forward
