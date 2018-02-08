@@ -1,3 +1,5 @@
+// You shouldn't leave API keys on GitHUb. These should be added to the .env file.
+// This file also doen't export anything. I don't think it isn't contributing to the app.
 const request = require('request')
 
 request({
