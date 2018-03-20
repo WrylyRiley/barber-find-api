@@ -21,11 +21,11 @@ router.post('/', (req, res) => {
 })
 
 // find specific barber by id
-router.get('/:id', (req, res) => {
-  Barbers.findById(req.params.id)
-    .then(barber => res.json(barber))
-    .catch(err => console.log(err))
-})
+// router.get('/:id', (req, res) => {
+//   Barbers.findById(req.params.id)
+//     .then(barber => res.json(barber))
+//     .catch(err => console.log(err))
+// })
 
 // update a barbers information
 router.put('/:id', (req, res) => {
